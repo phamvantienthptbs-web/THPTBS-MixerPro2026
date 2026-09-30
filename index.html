@@ -1591,11 +1591,21 @@ def generate_shuffled(options_json):
             }
         });
 
-        document.getElementById('logout-btn').addEventListener('click', function () {
+        // Khóa lại: dùng cho nút Đăng xuất và khi trình duyệt khôi phục trang từ bộ nhớ đệm
+        function lock() {
             root.classList.remove('auth-ok');
             input.value = '';
+            setPasswordVisible(false);
             errorEl.classList.add('hidden');
             applyState();
+        }
+
+        document.getElementById('logout-btn').addEventListener('click', lock);
+
+        // Bấm nút Back/Forward hoặc mở lại tab trên điện thoại: trình duyệt có thể khôi phục nguyên trạng thái
+        // trang (đang mở khóa) mà không tải lại -> bắt buộc nhập lại mật khẩu.
+        window.addEventListener('pageshow', function (e) {
+            if (e.persisted) lock();
         });
 
         applyState();
